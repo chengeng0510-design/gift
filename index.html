@@ -24,7 +24,6 @@
             padding: 20px;
         }
 
-        /* 主容器 */
         .container {
             max-width: 640px;
             width: 100%;
@@ -40,7 +39,7 @@
             transition: all 0.3s ease;
         }
 
-        /* 封面区域 */
+        /* 封面 */
         .cover {
             text-align: center;
             display: flex;
@@ -107,10 +106,12 @@
             transform: scale(0.96);
         }
 
-        /* 文字内容区域（初始隐藏） */
+        /* 故事区域 */
         .story {
             display: none;
             animation: fadeUp 0.6s ease-out;
+            min-height: 380px;
+            position: relative;
         }
 
         .story.active {
@@ -122,21 +123,76 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
+        /* 每个段落默认完全透明且上移，等待显示 */
         .story .paragraph {
             font-size: 1.05rem;
             line-height: 1.9;
             color: #3e2c3b;
-            margin-bottom: 1.2rem;
+            margin-bottom: 0; /* 由容器撑开 */
             text-indent: 2em;
             letter-spacing: 0.3px;
             opacity: 0;
             transform: translateY(12px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 0 4px;
+            pointer-events: none; /* 防止遮挡点击 */
+        }
+
+        /* 显示状态 */
+        .story .paragraph.show {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative; /* 恢复文档流，但切换时会重新变为absolute? 其实我们切换时控制显示，可以让所有段落绝对定位，但更好是让它们叠在一起。为了简单，我们使用absolute定位所有段落，使得它们重叠，当前显示的一个可见。这样切换时没有高度跳动。 */
+        }
+
+        /* 为了更好的重叠，让所有段落都绝对定位 */
+        .story .paragraph {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 0 4px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            pointer-events: none;
         }
 
         .story .paragraph.show {
             opacity: 1;
             transform: translateY(0);
+            position: relative; /* 切换为相对定位，撑开父容器高度，但这样会导致其他段落也占据高度，导致跳动。更好的做法：所有段落都absolute，父容器给一个固定最小高度，或者用js动态调整高度。但是为了简单，我们可以让所有段落absolute，然后父容器高度由内容决定？但absolute不占空间，所以需要给story一个固定高度或者根据内容动态设置。我们可以用js在显示时设置高度。或者我们可以不用absolute，而是用display:none和block切换，但那样无法淡入淡出。为了有淡出效果，我们可以让所有段落叠加，但只有当前段落可见，其他段落不可见，但保持占位？不可见但占位会导致高度不变，但内容切换时，高度不变，但内容长度不同可能导致空白或溢出。最好还是使用absolute，然后动态设置父容器高度。简便做法：使用visibility和opacity，但visibility:hidden不占空间？实际上visibility:hidden占空间，但opacity:0也占空间，所以我们可以让所有段落都是相对定位，且占据空间，但只显示当前段落（其他opacity:0），这样高度会累加导致空白。但我们可以用display:none来隐藏不显示的段落，但那样没有淡入淡出。用户只要求“只有该段”，可以接受瞬间切换，但保留淡入效果即可，不要求淡出。所以我们可以把其他段落的opacity设为0，但依然占据空间，但会导致文字重叠？如果所有段落都相对定位，它们会按顺序排列，那么只有当前段可见，其他段隐藏（opacity:0）但依然占位，这样高度是固定的，但段落内容长度不同，占位空白可能影响美观。所以更好的做法是：每次只显示一个段落，其他段落display:none，这样不占空间，但无法淡入淡出。我们可以接受淡入，但不淡出，因为淡出不是必须。但用户没提淡出，只说“只有该段”，所以我们可以直接切换，前一段消失，后一段淡入。用display:none和block配合淡入动画（在block后添加类触发transition）。但display:none不能过渡，所以我们可以用visibility和opacity，但visibility:hidden依然占空间。最后我们采用：所有段落使用display:block，但初始opacity:0，且position:absolute，这样它们重叠，高度由父容器控制。我们需要设置父容器的高度，可以动态根据当前段落的高度设置，但麻烦。我们可以给story一个固定的最小高度，比如400px，然后文字居中显示。我们可以用flex居中。我决定使用更简单的方法：所有段落用display:none，然后显示当前段落时，改为display:block，然后添加一个类触发淡入动画（用@keyframes或transition）。因为display:block后立即添加类，可以触发transition。但display:block不会触发transition，所以需要先设置display:block，然后下一帧添加类。可以用requestAnimationFrame。或者用setTimeout 0。但更简单的方法：不使用transition，而是使用CSS animation，当添加类时触发动画。这样我们可以用animation: fadeIn 0.8s ease forwards; 这样即使display:block，动画也会执行。其他段落display:none。这样不会重叠，高度自动适应，而且只有当前段有动画。所以我们采用这个方法。这样代码更简洁。
+
+        我们重写：所有段落默认display:none; 当需要显示某段时，设置display:block，并添加一个类'animate'，触发淡入动画。切换时，先将前一段display:none，再显示新段落。
+
+        这样就没有淡出效果，但淡入是有的。符合“一段段文字浮现”的要求。
+
+        我们按此修改。
+        */
+
+        /* 新的段落样式 */
+        .story .paragraph {
+            display: none; /* 默认隐藏 */
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #3e2c3b;
+            text-indent: 2em;
+            letter-spacing: 0.3px;
+            animation: fadeInText 0.8s ease forwards;
+            padding: 0 4px;
+        }
+
+        .story .paragraph.show {
+            display: block; /* 显示时 */
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .story .paragraph:first-of-type {
@@ -168,12 +224,10 @@
             user-select: none;
         }
 
-        /* 隐藏音频控件 */
         audio {
             display: none;
         }
 
-        /* 响应式 */
         @media (max-width: 480px) {
             .container {
                 padding: 28px 18px 32px;
@@ -212,10 +266,10 @@
 
     <!-- 故事正文 -->
     <div class="story" id="story">
-        <!-- 段落将动态插入 -->
+        <!-- 段落由JS动态生成 -->
     </div>
 
-    <!-- 背景音乐（静音加载） -->
+    <!-- 背景音乐 -->
     <audio id="bgm" loop preload="auto">
         <source src="bgm.mp3" type="audio/mpeg">
         你的浏览器不支持音频。
@@ -224,7 +278,7 @@
 
 <script>
     (function() {
-        // ----- 文本段落（按自然段分割）-----
+        // 段落文本
         const paragraphs = [
             "小韩：",
             "上次七夕因为太忙，没来得及给你准备礼物，现在给你补上，希望不算太晚。",
@@ -239,7 +293,7 @@
         const btnStart = document.getElementById('btnStart');
         const bgm = document.getElementById('bgm');
 
-        // ----- 渲染段落（先隐藏）-----
+        // 生成段落元素，添加到story
         paragraphs.forEach(text => {
             const p = document.createElement('p');
             p.className = 'paragraph';
@@ -247,39 +301,57 @@
             storyEl.appendChild(p);
         });
 
-        // 获取所有段落元素
         const paraElements = storyEl.querySelectorAll('.paragraph');
+        let currentIndex = 0;
+        let timer = null;
 
-        // ----- 点击开始按钮 -----
-        btnStart.addEventListener('click', function() {
-            // 1. 隐藏封面
+        // 显示指定索引的段落，隐藏其他
+        function showParagraph(index) {
+            // 隐藏所有
+            paraElements.forEach(p => p.classList.remove('show'));
+            // 显示目标
+            if (index < paraElements.length) {
+                paraElements[index].classList.add('show');
+            }
+        }
+
+        // 开始逐段显示
+        function startStory() {
+            // 隐藏封面
             coverEl.style.display = 'none';
-            // 2. 显示故事区
+            // 显示故事区域
             storyEl.classList.add('active');
 
-            // 3. 播放 BGM（需要用户交互）
-            bgm.play().catch(e => console.log('BGM 播放失败（可能未上传音频文件）', e));
+            // 播放BGM
+            bgm.play().catch(e => console.warn('BGM播放失败', e));
 
-            // 4. 逐段显示文字（每隔 1.2 秒浮现一段）
-            let index = 0;
-            function showNext() {
-                if (index < paraElements.length) {
-                    paraElements[index].classList.add('show');
-                    index++;
-                    setTimeout(showNext, 1000); // 间隔1秒
+            // 显示第一段
+            currentIndex = 0;
+            showParagraph(currentIndex);
+            currentIndex++;
+
+            // 设定定时器，每隔5秒显示下一段
+            timer = setInterval(function() {
+                if (currentIndex < paraElements.length) {
+                    showParagraph(currentIndex);
+                    currentIndex++;
+                } else {
+                    // 全部显示完毕，清除定时器
+                    clearInterval(timer);
+                    timer = null;
                 }
-            }
-            // 第一段立即显示，后续依次
-            setTimeout(showNext, 300); // 稍微延迟，让入场动画先走
-        });
+            }, 5000); // 5秒间隔，速度为原来的五分之一（原1秒）
+        }
 
-        // ----- 优化：如果用户点击封面以外的区域（如标题）也能触发？但不用，只有按钮触发 -----
+        // 点击开始按钮
+        btnStart.addEventListener('click', startStory);
 
-        // ----- 若音频加载失败，不阻塞页面 -----
+        // 如果用户想重新开始，可以刷新页面，这里不做额外处理
+
+        // BGM错误提示
         bgm.addEventListener('error', function() {
-            console.warn('BGM 文件未找到，请确保 bgm.mp3 和本页面在同一目录下。');
+            console.warn('未找到 bgm.mp3，请确保文件已上传。');
         });
-
     })();
 </script>
 
