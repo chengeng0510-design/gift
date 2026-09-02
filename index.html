@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>七夕 · 补给你的礼物</title>
-    <!-- 优雅字体 -->
+    <title>给小韩 · 迟到的七夕礼物</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -25,94 +24,129 @@
             padding: 20px;
         }
 
-        .card {
+        /* 主容器 */
+        .container {
             max-width: 640px;
             width: 100%;
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border-radius: 40px 40px 40px 40px;
+            border-radius: 40px;
             box-shadow: 0 20px 60px rgba(233, 30, 99, 0.15), 0 8px 24px rgba(0,0,0,0.06);
             padding: 40px 32px 48px;
             position: relative;
-            transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.6);
+            min-height: 500px;
+            transition: all 0.3s ease;
         }
 
-        /* 装饰小爱心 */
-        .card::before {
-            content: "❤️";
-            position: absolute;
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 36px;
-            background: #fff;
-            padding: 0 12px;
-            border-radius: 40px;
-            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
-            line-height: 1;
-        }
-
-        .header {
+        /* 封面区域 */
+        .cover {
             text-align: center;
-            margin-bottom: 28px;
-            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 420px;
         }
 
-        .header h1 {
+        .cover .heart-big {
+            font-size: 80px;
+            animation: beat 1.6s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+
+        .cover h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.4rem;
-            font-weight: 700;
+            font-size: 3.2rem;
             background: linear-gradient(135deg, #e91e63, #9c27b0);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: 1px;
+            margin: 16px 0 8px;
+            letter-spacing: 2px;
         }
 
-        .header .sub {
-            font-size: 0.95rem;
+        .cover .sub {
+            font-size: 1.1rem;
             color: #ad1457;
-            opacity: 0.7;
-            margin-top: 6px;
-            letter-spacing: 4px;
+            opacity: 0.8;
+            letter-spacing: 6px;
+            margin-bottom: 30px;
+        }
+
+        .cover .btn-start {
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+            border: none;
+            color: #fff;
+            font-size: 1.3rem;
             font-weight: 600;
+            padding: 16px 48px;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(233, 30, 99, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+            letter-spacing: 2px;
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin: 20px 0 24px;
-            color: #f06292;
-            font-size: 1.2rem;
-        }
-        .divider .line {
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #f06292, transparent);
+        .cover .btn-start:hover {
+            transform: scale(1.04);
+            box-shadow: 0 12px 32px rgba(233, 30, 99, 0.45);
         }
 
-        .content p {
+        .cover .btn-start:active {
+            transform: scale(0.96);
+        }
+
+        /* 文字内容区域（初始隐藏） */
+        .story {
+            display: none;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        .story.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .story .paragraph {
             font-size: 1.05rem;
             line-height: 1.9;
             color: #3e2c3b;
             margin-bottom: 1.2rem;
             text-indent: 2em;
             letter-spacing: 0.3px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
         }
 
-        .content p:first-of-type {
+        .story .paragraph.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .story .paragraph:first-of-type {
             text-indent: 0;
             font-weight: 600;
             font-size: 1.15rem;
             color: #880e4f;
         }
 
-        .content p:last-of-type {
-            margin-bottom: 0;
+        .story .paragraph:last-of-type {
             text-indent: 0;
             text-align: right;
             font-family: 'Dancing Script', cursive;
@@ -124,93 +158,130 @@
             font-weight: 700;
         }
 
-        /* 小点缀 */
+        /* 底部装饰 */
         .floating-hearts {
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             letter-spacing: 12px;
-            margin-top: 16px;
-            opacity: 0.6;
+            margin-top: 20px;
+            opacity: 0.5;
             user-select: none;
+        }
+
+        /* 隐藏音频控件 */
+        audio {
+            display: none;
         }
 
         /* 响应式 */
         @media (max-width: 480px) {
-            .card {
-                padding: 32px 20px 36px;
+            .container {
+                padding: 28px 18px 32px;
                 border-radius: 28px;
             }
-            .header h1 {
-                font-size: 2rem;
+            .cover h1 {
+                font-size: 2.6rem;
             }
-            .content p {
+            .cover .btn-start {
+                font-size: 1.1rem;
+                padding: 14px 36px;
+            }
+            .story .paragraph {
                 font-size: 0.98rem;
                 line-height: 1.8;
             }
-            .content p:last-of-type {
+            .story .paragraph:last-of-type {
                 font-size: 1.3rem;
             }
-            .card::before {
-                font-size: 28px;
-                top: -14px;
+            .cover .heart-big {
+                font-size: 60px;
             }
-        }
-
-        /* 淡入动画 */
-        .card {
-            animation: fadeUp 0.8s ease-out both;
-        }
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(30px) scale(0.97); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        /* 小爱心跳动 */
-        .heart-beat {
-            display: inline-block;
-            animation: beat 1.4s ease-in-out infinite;
-        }
-        @keyframes beat {
-            0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.2); }
-            30% { transform: scale(1); }
-            45% { transform: scale(1.15); }
-            60% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <div class="header">
-        <h1>To My Dearest</h1>
-        <div class="sub">✨ 七夕 · 补礼 ✨</div>
+<div class="container" id="app">
+    <!-- 封面 -->
+    <div class="cover" id="cover">
+        <div class="heart-big">❤️</div>
+        <h1>To 小韩</h1>
+        <div class="sub">一份迟到的七夕礼物</div>
+        <button class="btn-start" id="btnStart">✨ 开始阅读 ✨</button>
     </div>
 
-    <div class="divider">
-        <span class="line"></span>
-        <span class="heart-beat">💗</span>
-        <span class="line"></span>
+    <!-- 故事正文 -->
+    <div class="story" id="story">
+        <!-- 段落将动态插入 -->
     </div>
 
-    <div class="content">
-        <p>亲爱的，七夕快乐。这份礼物迟到了，但想说的话一点都没少。</p>
-
-        <p>还记得上次你说想要一个颈部按摩仪，我却粗心买成了靠背型，虽然你笑着说也能用，但我一直记着这个遗憾。这次特意给你补上这个智能腰部按摩仪，让它和那个“误打误撞”的靠背仪凑成一对——一个照顾你的肩颈，一个守护你的腰腹。</p>
-
-        <p>最让我安心的是它的热敷功能。你每次姨妈痛都蜷成小小一团，我看着心疼却只能递热水袋。现在它可以温柔地裹住你的小腹，或者贴在酸胀的后腰，恒温的热度像我的手一直轻轻捂着。等不那么疼了，还能切换按摩模式，帮你松一松久坐僵硬的腰肌。</p>
-
-        <p>考研的日子把我的时间越榨越少，不能像以前那样随时陪在你身边，心里总是亏欠。这个小小的按摩仪，就当是我笨拙的“替身”吧——它不懂甜言蜜语，但会老老实实发热、揉按，在你需要的时候安静陪着。等熬过这段忙碌，我一定亲手给你揉回来。</p>
-
-        <p>谢谢你一直包容我的粗心和缺席。你是我坚持下去的全部理由。</p>
-
-        <p>—— 爱你的我 ❤️</p>
-    </div>
-
-    <div class="floating-hearts">
-        <span>💕</span> <span>🌸</span> <span>💕</span>
-    </div>
+    <!-- 背景音乐（静音加载） -->
+    <audio id="bgm" loop preload="auto">
+        <source src="bgm.mp3" type="audio/mpeg">
+        你的浏览器不支持音频。
+    </audio>
 </div>
+
+<script>
+    (function() {
+        // ----- 文本段落（按自然段分割）-----
+        const paragraphs = [
+            "小韩：",
+            "上次七夕因为太忙，没来得及给你准备礼物，现在给你补上，希望不算太晚。",
+            "之前听你提过一嘴，说你妈妈用的颈部按摩仪特别好用，要是自己也有一个就好了。我悄悄记在心里，原本打算等你生日时作为礼物之一送给你。但后来我才发现，你说想要的是披肩式，而不是颈枕式——所以这次专门为你准备了这款披肩式的按摩仪。",
+            "它的功能还挺实用的。每次你来例假都会疼得厉害，而我却很少能在你身边。以前我在的时候，帮你揉揉肚子你会好受一些；现在我不在时，就让它来替我分担吧。你刚来例假那几天最疼，这款按摩仪的腰靠面热敷功能正好派上用场——你疼的时候总爱趴着，把它垫在小腹下面，温温热热的很舒服。等过几天没那么疼了，还可以切换到按摩功能，轻柔地按一按后腰，那里也是你常酸疼的地方，用轻柔模式按摩一会儿，能缓解不少。",
+            "我试了一下，在学校凳子上勉强也能用——虽然椅背有个大洞，支撑不太够，总归不如在床上靠得踏实，但有总比没有强。而且这个腰部按摩仪还可以和上次送你的颈部按摩仪搭配着用，肩颈和腰背一起放松，像是小陈在身边帮你捏一捏，应该能舒服不少。",
+            "以后我忙着备考，能陪你的时间会越来越少。希望这个小东西能暂时代替我，在你需要的时候，安安静静地陪着你。"
+        ];
+
+        const storyEl = document.getElementById('story');
+        const coverEl = document.getElementById('cover');
+        const btnStart = document.getElementById('btnStart');
+        const bgm = document.getElementById('bgm');
+
+        // ----- 渲染段落（先隐藏）-----
+        paragraphs.forEach(text => {
+            const p = document.createElement('p');
+            p.className = 'paragraph';
+            p.textContent = text;
+            storyEl.appendChild(p);
+        });
+
+        // 获取所有段落元素
+        const paraElements = storyEl.querySelectorAll('.paragraph');
+
+        // ----- 点击开始按钮 -----
+        btnStart.addEventListener('click', function() {
+            // 1. 隐藏封面
+            coverEl.style.display = 'none';
+            // 2. 显示故事区
+            storyEl.classList.add('active');
+
+            // 3. 播放 BGM（需要用户交互）
+            bgm.play().catch(e => console.log('BGM 播放失败（可能未上传音频文件）', e));
+
+            // 4. 逐段显示文字（每隔 1.2 秒浮现一段）
+            let index = 0;
+            function showNext() {
+                if (index < paraElements.length) {
+                    paraElements[index].classList.add('show');
+                    index++;
+                    setTimeout(showNext, 1000); // 间隔1秒
+                }
+            }
+            // 第一段立即显示，后续依次
+            setTimeout(showNext, 300); // 稍微延迟，让入场动画先走
+        });
+
+        // ----- 优化：如果用户点击封面以外的区域（如标题）也能触发？但不用，只有按钮触发 -----
+
+        // ----- 若音频加载失败，不阻塞页面 -----
+        bgm.addEventListener('error', function() {
+            console.warn('BGM 文件未找到，请确保 bgm.mp3 和本页面在同一目录下。');
+        });
+
+    })();
+</script>
 
 </body>
 </html>
