@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>给小韩 · 迟到的七夕礼物</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #fce4ec 0%, #f3e5f5 100%);
+            font-family: 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 640px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(233, 30, 99, 0.15), 0 8px 24px rgba(0,0,0,0.06);
+            padding: 40px 32px 48px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            min-height: 500px;
+            transition: all 0.3s ease;
+        }
+
+        /* 封面 */
+        .cover {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 420px;
+        }
+
+        .cover .heart-big {
+            font-size: 80px;
+            animation: beat 1.6s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+
+        .cover h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 16px 0 8px;
+            letter-spacing: 2px;
+        }
+
+        .cover .sub {
+            font-size: 1.1rem;
+            color: #ad1457;
+            opacity: 0.8;
+            letter-spacing: 6px;
+            margin-bottom: 30px;
+        }
+
+        .cover .btn-start {
+            background: linear-gradient(135deg, #e91e63, #ad1457);
+            border: none;
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 600;
+            padding: 16px 48px;
+            border-radius: 60px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(233, 30, 99, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+            letter-spacing: 2px;
+        }
+
+        .cover .btn-start:hover {
+            transform: scale(1.04);
+            box-shadow: 0 12px 32px rgba(233, 30, 99, 0.45);
+        }
+
+        .cover .btn-start:active {
+            transform: scale(0.96);
+        }
+
+        /* 故事区域 */
+        .story {
+            display: none;
+            animation: fadeUp 0.6s ease-out;
+            min-height: 380px;
+            flex-direction: column;
+            cursor: pointer; /* 提示可点击 */
+        }
+
+        .story.active {
+            display: flex;
+        }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 段落样式：默认隐藏，显示时淡入 */
+        .story .paragraph {
+            display: none;
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #3e2c3b;
+            text-indent: 2em;
+            letter-spacing: 0.3px;
+            padding: 0 4px;
+            animation: fadeInText 0.8s ease forwards;
+        }
+
+        .story .paragraph.show {
+            display: block;
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .story .paragraph:first-of-type {
+            text-indent: 0;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: #880e4f;
+        }
+
+        .story .paragraph:last-of-type {
+            text-indent: 0;
+            text-align: right;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: #ad1457;
+            margin-top: 10px;
+            border-top: 1px dashed #f8bbd0;
+            padding-top: 20px;
+            font-weight: 700;
+        }
+
+        /* 底部提示 */
+        .hint {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #bbb;
+            letter-spacing: 2px;
+            user-select: none;
+            pointer-events: none; /* 防止点击干扰 */
+        }
+
+        /* 底部装饰 */
+        .floating-hearts {
+            text-align: center;
+            font-size: 1.6rem;
+            letter-spacing: 12px;
+            margin-top: 10px;
+            opacity: 0.5;
+            user-select: none;
+        }
+
+        audio {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 28px 18px 32px;
+                border-radius: 28px;
+            }
+            .cover h1 {
+                font-size: 2.6rem;
+            }
+            .cover .btn-start {
+                font-size: 1.1rem;
+                padding: 14px 36px;
+            }
+            .story .paragraph {
+                font-size: 0.98rem;
+                line-height: 1.8;
+            }
+            .story .paragraph:last-of-type {
+                font-size: 1.3rem;
+            }
+            .cover .heart-big {
+                font-size: 60px;
+            }
+            .hint {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 封面 -->
+    <div class="cover" id="cover">
+        <div class="heart-big">❤️</div>
+        <h1>To 小韩</h1>
+        <div class="sub">一份迟到的七夕礼物</div>
+        <button class="btn-start" id="btnStart">✨ 开始阅读 ✨</button>
+    </div>
+
+    <!-- 故事正文 -->
+    <div class="story" id="story">
+        <!-- 段落由JS动态生成 -->
+        <!-- 底部提示 -->
+        <p class="hint">—— 点击任意处切换 ——</p>
+    </div>
+
+    <!-- 背景音乐 -->
+    <audio id="bgm" loop preload="auto">
+        <source src="bgm.mp3" type="audio/mpeg">
+        你的浏览器不支持音频。
+    </audio>
+</div>
+
+<script>
+    (function() {
+        // ----- 段落文本 -----
+        const paragraphs = [
+            "小韩：",
+            "上次七夕因为太忙，没来得及给你准备礼物，现在给你补上，希望不算太晚。",
+            "之前听你提过一嘴，说你妈妈用的颈部按摩仪特别好用，要是自己也有一个就好了。我悄悄记在心里，原本打算等你生日时作为礼物之一送给你。但后来我才发现，你说想要的是披肩式，而不是颈枕式——所以这次专门为你准备了这款披肩式的按摩仪。",
+            "它的功能还挺实用的。每次你来例假都会疼得厉害，而我却很少能在你身边。以前我在的时候，帮你揉揉肚子你会好受一些；现在我不在时，就让它来替我分担吧。你刚来例假那几天最疼，这款按摩仪的腰靠面热敷功能正好派上用场——你疼的时候总爱趴着，把它垫在小腹下面，温温热热的很舒服。等过几天没那么疼了，还可以切换到按摩功能，轻柔地按一按后腰，那里也是你常酸疼的地方，用轻柔模式按摩一会儿，能缓解不少。",
+            "我试了一下，在学校凳子上勉强也能用——虽然椅背有个大洞，支撑不太够，总归不如在床上靠得踏实，但有总比没有强。而且这个腰部按摩仪还可以和上次送你的颈部按摩仪搭配着用，肩颈和腰背一起放松，像是小陈在身边帮你捏一捏，应该能舒服不少。",
+            "以后我忙着备考，能陪你的时间会越来越少。希望这个小东西能暂时代替我，在你需要的时候，安安静静地陪着你。"
+        ];
+
+        const storyEl = document.getElementById('story');
+        const coverEl = document.getElementById('cover');
+        const btnStart = document.getElementById('btnStart');
+        const bgm = document.getElementById('bgm');
+
+        // 生成段落 DOM（插入到提示之前）
+        const hintEl = storyEl.querySelector('.hint');
+        const fragment = document.createDocumentFragment();
+        paragraphs.forEach(text => {
+            const p = document.createElement('p');
+            p.className = 'paragraph';
+            p.textContent = text;
+            fragment.appendChild(p);
+        });
+        storyEl.insertBefore(fragment, hintEl);
+
+        const paraElements = storyEl.querySelectorAll('.paragraph');
+        let currentIndex = 0;
+        let isFinished = false;
+        let isStarted = false; // 防止重复绑定
+
+        // 显示指定索引的段落，隐藏其他
+        function showParagraph(index) {
+            paraElements.forEach(p => p.classList.remove('show'));
+            if (index < paraElements.length) {
+                paraElements[index].classList.add('show');
+            }
+        }
+
+        // 切换到下一段
+        function goToNext() {
+            if (isFinished) return;
+            if (currentIndex < paraElements.length - 1) {
+                currentIndex++;
+                showParagraph(currentIndex);
+                // 如果到达最后一段，标记完成
+                if (currentIndex === paraElements.length - 1) {
+                    isFinished = true;
+                    // 可更改提示文字（可选）
+                    hintEl.textContent = '💕 已全部读完 💕';
+                }
+            }
+        }
+
+        // 点击故事区域切换
+        function handleStoryClick(e) {
+            // 防止点击提示文字触发两次（但 pointer-events: none 已阻止）
+            goToNext();
+        }
+
+        // 开始阅读
+        function startStory() {
+            if (isStarted) return;
+            isStarted = true;
+
+            // 隐藏封面
+            coverEl.style.display = 'none';
+            // 显示故事区
+            storyEl.classList.add('active');
+
+            // 播放 BGM
+            bgm.play().catch(e => console.warn('BGM 播放失败，请确认 bgm.mp3 已上传', e));
+
+            // 重置到第一段
+            currentIndex = 0;
+            showParagraph(currentIndex);
+            isFinished = false;
+            hintEl.textContent = '—— 点击任意处切换 ——';
+
+            // 绑定点击事件
+            storyEl.addEventListener('click', handleStoryClick);
+        }
+
+        // 点击“开始阅读”
+        btnStart.addEventListener('click', startStory);
+
+        // BGM 加载失败提示
+        bgm.addEventListener('error', function() {
+            console.warn('未找到 bgm.mp3，请将音乐文件与 index.html 放在同一目录。');
+        });
+
+    })();
+</script>
+
+</body>
+</html>
