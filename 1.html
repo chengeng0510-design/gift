@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>七夕 · 补给你的礼物</title>
+    <!-- 优雅字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #fce4ec 0%, #f3e5f5 100%);
+            font-family: 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
+            padding: 20px;
+        }
+
+        .card {
+            max-width: 640px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 40px 40px 40px 40px;
+            box-shadow: 0 20px 60px rgba(233, 30, 99, 0.15), 0 8px 24px rgba(0,0,0,0.06);
+            padding: 40px 32px 48px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* 装饰小爱心 */
+        .card::before {
+            content: "❤️";
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 36px;
+            background: #fff;
+            padding: 0 12px;
+            border-radius: 40px;
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+            line-height: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+            margin-top: 8px;
+        }
+
+        .header h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e91e63, #9c27b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        .header .sub {
+            font-size: 0.95rem;
+            color: #ad1457;
+            opacity: 0.7;
+            margin-top: 6px;
+            letter-spacing: 4px;
+            font-weight: 600;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0 24px;
+            color: #f06292;
+            font-size: 1.2rem;
+        }
+        .divider .line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #f06292, transparent);
+        }
+
+        .content p {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: #3e2c3b;
+            margin-bottom: 1.2rem;
+            text-indent: 2em;
+            letter-spacing: 0.3px;
+        }
+
+        .content p:first-of-type {
+            text-indent: 0;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: #880e4f;
+        }
+
+        .content p:last-of-type {
+            margin-bottom: 0;
+            text-indent: 0;
+            text-align: right;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: #ad1457;
+            margin-top: 10px;
+            border-top: 1px dashed #f8bbd0;
+            padding-top: 20px;
+            font-weight: 700;
+        }
+
+        /* 小点缀 */
+        .floating-hearts {
+            text-align: center;
+            font-size: 1.8rem;
+            letter-spacing: 12px;
+            margin-top: 16px;
+            opacity: 0.6;
+            user-select: none;
+        }
+
+        /* 响应式 */
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 20px 36px;
+                border-radius: 28px;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .content p {
+                font-size: 0.98rem;
+                line-height: 1.8;
+            }
+            .content p:last-of-type {
+                font-size: 1.3rem;
+            }
+            .card::before {
+                font-size: 28px;
+                top: -14px;
+            }
+        }
+
+        /* 淡入动画 */
+        .card {
+            animation: fadeUp 0.8s ease-out both;
+        }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(30px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* 小爱心跳动 */
+        .heart-beat {
+            display: inline-block;
+            animation: beat 1.4s ease-in-out infinite;
+        }
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            15% { transform: scale(1.2); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="header">
+        <h1>To My Dearest</h1>
+        <div class="sub">✨ 七夕 · 补礼 ✨</div>
+    </div>
+
+    <div class="divider">
+        <span class="line"></span>
+        <span class="heart-beat">💗</span>
+        <span class="line"></span>
+    </div>
+
+    <div class="content">
+        <p>亲爱的，七夕快乐。这份礼物迟到了，但想说的话一点都没少。</p>
+
+        <p>还记得上次你说想要一个颈部按摩仪，我却粗心买成了靠背型，虽然你笑着说也能用，但我一直记着这个遗憾。这次特意给你补上这个智能腰部按摩仪，让它和那个“误打误撞”的靠背仪凑成一对——一个照顾你的肩颈，一个守护你的腰腹。</p>
+
+        <p>最让我安心的是它的热敷功能。你每次姨妈痛都蜷成小小一团，我看着心疼却只能递热水袋。现在它可以温柔地裹住你的小腹，或者贴在酸胀的后腰，恒温的热度像我的手一直轻轻捂着。等不那么疼了，还能切换按摩模式，帮你松一松久坐僵硬的腰肌。</p>
+
+        <p>考研的日子把我的时间越榨越少，不能像以前那样随时陪在你身边，心里总是亏欠。这个小小的按摩仪，就当是我笨拙的“替身”吧——它不懂甜言蜜语，但会老老实实发热、揉按，在你需要的时候安静陪着。等熬过这段忙碌，我一定亲手给你揉回来。</p>
+
+        <p>谢谢你一直包容我的粗心和缺席。你是我坚持下去的全部理由。</p>
+
+        <p>—— 爱你的我 ❤️</p>
+    </div>
+
+    <div class="floating-hearts">
+        <span>💕</span> <span>🌸</span> <span>💕</span>
+    </div>
+</div>
+
+</body>
+</html>
