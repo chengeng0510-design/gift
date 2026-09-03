@@ -19,24 +19,96 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(145deg, #fce4ec 0%, #f3e5f5 100%);
-            font-family: 'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
             padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+            background: #1a0b1a; /* 深色基底，衬托光效 */
         }
 
+        /* ===== 花哨背景层 ===== */
+        .bg-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, #ff9a9e 0%, #fad0c4 30%, #fbc2eb 60%, #a18cd1 85%, #fbc2eb 100%);
+            background-size: 200% 200%;
+            animation: gradientMove 18s ease infinite alternate;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        /* 闪烁光晕 */
+        .bg-layer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 60% 40%, rgba(255,255,255,0.15) 0%, transparent 60%),
+                        radial-gradient(circle at 30% 70%, rgba(255,200,230,0.2) 0%, transparent 50%);
+            animation: shimmer 8s ease-in-out infinite alternate;
+        }
+        @keyframes shimmer {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            100% { transform: translate(-5%, -5%) scale(1.1); opacity: 1; }
+        }
+
+        /* ===== 漂浮装饰 ===== */
+        .floating-deco {
+            position: fixed;
+            z-index: 1;
+            pointer-events: none;
+            font-size: 2.4rem;
+            opacity: 0.5;
+            animation: floatUp 12s infinite alternate ease-in-out;
+            user-select: none;
+            will-change: transform, opacity;
+        }
+        .floating-deco:nth-child(1) { left: 5%; top: 10%; animation-duration: 14s; font-size: 3rem; opacity: 0.4; }
+        .floating-deco:nth-child(2) { left: 85%; top: 20%; animation-duration: 16s; animation-delay: 2s; font-size: 2rem; opacity: 0.5; }
+        .floating-deco:nth-child(3) { left: 15%; top: 70%; animation-duration: 13s; animation-delay: 4s; font-size: 3.2rem; opacity: 0.3; }
+        .floating-deco:nth-child(4) { left: 75%; top: 75%; animation-duration: 15s; animation-delay: 1s; font-size: 2.6rem; opacity: 0.4; }
+        .floating-deco:nth-child(5) { left: 50%; top: 5%; animation-duration: 18s; animation-delay: 3s; font-size: 2rem; opacity: 0.3; }
+        .floating-deco:nth-child(6) { left: 90%; top: 50%; animation-duration: 12s; animation-delay: 5s; font-size: 3rem; opacity: 0.4; }
+        .floating-deco:nth-child(7) { left: 10%; top: 45%; animation-duration: 17s; animation-delay: 0.5s; font-size: 2.2rem; opacity: 0.35; }
+        .floating-deco:nth-child(8) { left: 65%; top: 60%; animation-duration: 14s; animation-delay: 2.5s; font-size: 2.8rem; opacity: 0.3; }
+        /* 更多小星星 */
+        .floating-deco:nth-child(9) { left: 30%; top: 85%; animation-duration: 19s; animation-delay: 1.5s; font-size: 1.8rem; opacity: 0.5; }
+        .floating-deco:nth-child(10) { left: 55%; top: 30%; animation-duration: 11s; animation-delay: 3.5s; font-size: 2rem; opacity: 0.4; }
+
+        @keyframes floatUp {
+            0% { transform: translate(0, 0) rotate(0deg) scale(0.9); opacity: 0.2; }
+            25% { transform: translate(10px, -20px) rotate(10deg) scale(1.1); opacity: 0.6; }
+            50% { transform: translate(-10px, -40px) rotate(-5deg) scale(0.95); opacity: 0.4; }
+            75% { transform: translate(15px, -60px) rotate(8deg) scale(1.05); opacity: 0.7; }
+            100% { transform: translate(-5px, -80px) rotate(-3deg) scale(1); opacity: 0.3; }
+        }
+
+        /* ===== 主卡片 ===== */
         .container {
             max-width: 640px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 40px;
-            box-shadow: 0 20px 60px rgba(233, 30, 99, 0.15), 0 8px 24px rgba(0,0,0,0.06);
+            box-shadow: 0 20px 60px rgba(233, 30, 99, 0.25), 0 8px 24px rgba(0,0,0,0.1);
             padding: 40px 32px 48px;
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            z-index: 2;
+            border: 1px solid rgba(255, 255, 255, 0.5);
             min-height: 500px;
             transition: all 0.3s ease;
+            /* 增加内部柔和发光 */
+            box-shadow: 0 0 80px rgba(255, 182, 193, 0.3), 0 20px 60px rgba(233, 30, 99, 0.2);
         }
 
         /* 封面 */
@@ -53,11 +125,12 @@
             font-size: 80px;
             animation: beat 1.6s ease-in-out infinite;
             display: inline-block;
+            filter: drop-shadow(0 0 20px rgba(233,30,99,0.4));
         }
 
         @keyframes beat {
             0%, 100% { transform: scale(1); }
-            15% { transform: scale(1.2); }
+            15% { transform: scale(1.25); }
             30% { transform: scale(1); }
             45% { transform: scale(1.15); }
             60% { transform: scale(1); }
@@ -72,14 +145,17 @@
             background-clip: text;
             margin: 16px 0 8px;
             letter-spacing: 2px;
+            text-shadow: 0 0 40px rgba(233,30,99,0.2);
         }
 
         .cover .sub {
             font-size: 1.1rem;
             color: #ad1457;
-            opacity: 0.8;
+            opacity: 0.85;
             letter-spacing: 6px;
             margin-bottom: 30px;
+            font-weight: 600;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
 
         .cover .btn-start {
@@ -91,17 +167,32 @@
             padding: 16px 48px;
             border-radius: 60px;
             cursor: pointer;
-            box-shadow: 0 8px 24px rgba(233, 30, 99, 0.35);
+            box-shadow: 0 8px 24px rgba(233, 30, 99, 0.45);
             transition: transform 0.2s, box-shadow 0.2s;
             font-family: inherit;
             letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
         }
-
+        .cover .btn-start::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 60%);
+            animation: btnGlow 3s ease-in-out infinite;
+        }
+        @keyframes btnGlow {
+            0% { transform: translate(-10%, -10%) scale(1); opacity: 0.5; }
+            50% { transform: translate(10%, 10%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-10%, -10%) scale(1); opacity: 0.5; }
+        }
         .cover .btn-start:hover {
             transform: scale(1.04);
-            box-shadow: 0 12px 32px rgba(233, 30, 99, 0.45);
+            box-shadow: 0 12px 32px rgba(233, 30, 99, 0.6);
         }
-
         .cover .btn-start:active {
             transform: scale(0.96);
         }
@@ -112,7 +203,7 @@
             animation: fadeUp 0.6s ease-out;
             min-height: 380px;
             flex-direction: column;
-            cursor: pointer; /* 提示可点击 */
+            cursor: pointer;
         }
 
         .story.active {
@@ -124,7 +215,6 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* 段落样式：默认隐藏，显示时淡入 */
         .story .paragraph {
             display: none;
             font-size: 1.05rem;
@@ -141,8 +231,8 @@
         }
 
         @keyframes fadeInText {
-            0% { opacity: 0; transform: translateY(12px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% { opacity: 0; transform: translateY(12px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .story .paragraph:first-of-type {
@@ -172,16 +262,16 @@
             color: #bbb;
             letter-spacing: 2px;
             user-select: none;
-            pointer-events: none; /* 防止点击干扰 */
+            pointer-events: none;
         }
 
-        /* 底部装饰 */
+        /* 底部装饰（容器内） */
         .floating-hearts {
             text-align: center;
             font-size: 1.6rem;
             letter-spacing: 12px;
             margin-top: 10px;
-            opacity: 0.5;
+            opacity: 0.4;
             user-select: none;
         }
 
@@ -214,11 +304,30 @@
             .hint {
                 font-size: 0.75rem;
             }
+            .floating-deco {
+                font-size: 1.6rem !important;
+            }
         }
     </style>
 </head>
 <body>
 
+<!-- 花哨背景层 -->
+<div class="bg-layer"></div>
+
+<!-- 漂浮装饰 -->
+<div class="floating-deco">❤️</div>
+<div class="floating-deco">✨</div>
+<div class="floating-deco">🌸</div>
+<div class="floating-deco">💫</div>
+<div class="floating-deco">🌹</div>
+<div class="floating-deco">💖</div>
+<div class="floating-deco">🌟</div>
+<div class="floating-deco">💕</div>
+<div class="floating-deco">✨</div>
+<div class="floating-deco">❤️</div>
+
+<!-- 主卡片 -->
 <div class="container">
     <!-- 封面 -->
     <div class="cover" id="cover">
@@ -231,8 +340,8 @@
     <!-- 故事正文 -->
     <div class="story" id="story">
         <!-- 段落由JS动态生成 -->
-        <!-- 底部提示 -->
         <p class="hint">—— 点击任意处切换 ——</p>
+        <div class="floating-hearts">💕 🌸 💕</div>
     </div>
 
     <!-- 背景音乐 -->
@@ -259,8 +368,11 @@
         const btnStart = document.getElementById('btnStart');
         const bgm = document.getElementById('bgm');
 
-        // 生成段落 DOM（插入到提示之前）
+        // 获取提示和装饰元素，以便插入段落
         const hintEl = storyEl.querySelector('.hint');
+        const heartsEl = storyEl.querySelector('.floating-hearts');
+
+        // 生成段落 DOM（插入到提示之前）
         const fragment = document.createDocumentFragment();
         paragraphs.forEach(text => {
             const p = document.createElement('p');
@@ -273,9 +385,9 @@
         const paraElements = storyEl.querySelectorAll('.paragraph');
         let currentIndex = 0;
         let isFinished = false;
-        let isStarted = false; // 防止重复绑定
+        let isStarted = false;
 
-        // 显示指定索引的段落，隐藏其他
+        // 显示指定索引的段落
         function showParagraph(index) {
             paraElements.forEach(p => p.classList.remove('show'));
             if (index < paraElements.length) {
@@ -289,10 +401,8 @@
             if (currentIndex < paraElements.length - 1) {
                 currentIndex++;
                 showParagraph(currentIndex);
-                // 如果到达最后一段，标记完成
                 if (currentIndex === paraElements.length - 1) {
                     isFinished = true;
-                    // 可更改提示文字（可选）
                     hintEl.textContent = '💕 已全部读完 💕';
                 }
             }
@@ -300,7 +410,6 @@
 
         // 点击故事区域切换
         function handleStoryClick(e) {
-            // 防止点击提示文字触发两次（但 pointer-events: none 已阻止）
             goToNext();
         }
 
@@ -309,28 +418,22 @@
             if (isStarted) return;
             isStarted = true;
 
-            // 隐藏封面
             coverEl.style.display = 'none';
-            // 显示故事区
             storyEl.classList.add('active');
 
             // 播放 BGM
             bgm.play().catch(e => console.warn('BGM 播放失败，请确认 bgm.mp3 已上传', e));
 
-            // 重置到第一段
             currentIndex = 0;
             showParagraph(currentIndex);
             isFinished = false;
             hintEl.textContent = '—— 点击任意处切换 ——';
 
-            // 绑定点击事件
             storyEl.addEventListener('click', handleStoryClick);
         }
 
-        // 点击“开始阅读”
         btnStart.addEventListener('click', startStory);
 
-        // BGM 加载失败提示
         bgm.addEventListener('error', function() {
             console.warn('未找到 bgm.mp3，请将音乐文件与 index.html 放在同一目录。');
         });
